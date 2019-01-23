@@ -1,9 +1,8 @@
 [![Build Status](https://travis-ci.org/open-io/ansible-role-openio-nfs.svg?branch=master)](https://travis-ci.org/open-io/ansible-role-openio-nfs)
 # Ansible role `nfs`
 
-An Ansible role for installing NFSd. Specifically, the responsibilities of this role are to:
-
--
+An Ansible role for installing an NFS server. Currently the install is opinionated and is designed for NFSv3 endpoints.
+Support for more advanced NFSv4 configurations will come in the future
 
 ## Requirements
 
@@ -12,9 +11,12 @@ An Ansible role for installing NFSd. Specifically, the responsibilities of this 
 ## Role Variables
 
 
-| Variable   | Default | Comments (type)  |
-| :---       | :---    | :---             |
-| `openio_nfs_...` | `...`   | ...              |
+| Variable                    | Default | Comments (type)                             |
+| --------------------------- | ------- | ------------------------------------------- |
+| `openio_nfs_exports`        | `[]`    | List of mountpoints to deploy*              |
+| `openio_nfs_provision_only` | `false` | Provision only, without restarting services |
+
+> \* For export format, see *Example playbook*
 
 ## Dependencies
 
@@ -23,27 +25,47 @@ No dependencies.
 ## Example Playbook
 
 ```yaml
-- hosts: all
+- hosts: nfs
   become: true
   vars:
-    NS: OPENIO
-
+    openio_nfs_exports:
+    - mountpoint: "/mnt/default"
+      client: "*"
+      options:
+      - "rw"
+      - "async"
+      - "all_squash"
+      uid: 560
+      gid: 560
+  pre_tasks:
+    - name: "Generate NFS users/groups"
+      include_role:
+          name: users
+      vars:
+          openio_users_groups:
+          - groupname: "{{ 'nfsgroup_' + mount.gid | string }}"
+            gid: "{{ mount.gid }}"
+          openio_users_add:
+          - username: "{{ 'nfsuser_' + mount.uid | string }}"
+            uid: "{{ mount.uid }}"
+            group: "{{ 'nfsgroup_' + mount.gid | string }}"
+            groups: []
+            home_create: false
+            shell: "/sbin/nologin"
+      with_items: "{{ openio_nfs_exports }}"
+      loop_control:
+        loop_var: mount
   roles:
-    - role: repo
-      openio_repository_products:
-        sds:
-          release: "18.10"
-    - role: users
-    - role: gridinit
-      openio_gridinit_namespace: "{{ NS }}"
-    - role: role_under_test
-      openio_nfs_namespace: "{{ NS }}"
+    - role: nfs
 ```
 
 
 ```ini
 [all]
 node1 ansible_host=192.168.1.173
+
+[nfs]
+node1
 ```
 
 ## Contributing
@@ -60,6 +82,7 @@ GNU AFFERO GENERAL PUBLIC LICENSE, Version 3
 
 ## Contributors
 
+- [Vladimir DOMBROVSKI](https://github.com/vdombrovski) (maintainer)
 - [Cedric DELGEHIER](https://github.com/cdelgehier) (maintainer)
 - [Romain ACCIARI](https://github.com/racciari) (maintainer)
 - [Vincent LEGOLL](https://github.com/vincent-legoll) (maintainer)
