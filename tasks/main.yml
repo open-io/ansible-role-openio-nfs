@@ -14,44 +14,32 @@
     - "{{ ansible_os_family }}.yml"
   tags: install
 
-- name: Ensure directories exists
+- name: Provision NFS directories
   file:
-    path: "{{ item.path }}"
+    path: "{{ item.mountpoint }}"
     state: directory
-    owner: "{{ item.owner | default('openio') }}"
-    group: "{{ item.group | default('openio') }}"
-    mode: "{{ item.mode | default(0755) }}"
+    owner: "{{ item.uid }}"
+    group: "{{ item.gid }}"
+    mode: "0700"
   with_items:
-    - path: "/etc/gridinit.d/{{ openio_nfs_namespace }}"
-    - path: "{{ openio_nfs_sysconfig_dir }}/{{ openio_nfs_servicename }}"
-    #- path: "{{ openio_nfs_volume }}"
-    #- path: "{{ openio_nfs_pid_directory }}"
-    - path: "/var/log/oio/sds/{{ openio_nfs_namespace }}/{{ openio_nfs_servicename }}"
-      owner: "{{ syslog_user }}"
-      mode: "0750"
-  tags: install
+    - "{{ openio_nfs_exports }}"
+  tags: configure
 
-- name: Generate configuration files
+- name: Generate exports
   template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    owner: openio
-    group: openio
+    src: "exports.j2"
+    dest: "/etc/exports"
+    owner: root
+    group: root
     mode: 0644
-  with_items:
-    - src: "nfs.conf.j2"
-      dest: "{{ openio_nfs_sysconfig_dir }}/\
-        {{ openio_nfs_servicename }}/{{ openio_nfs_servicename }}.conf"
-    - src: "gridinit_nfs.conf.j2"
-      dest: "{{ openio_nfs_gridinit_dir }}/{{ openio_nfs_gridinit_file_prefix }}\
-        {{ openio_nfs_servicename }}.conf"
   register: _nfs_conf
   tags: configure
 
 - name: restart nfs
-  shell: |
-    gridinit_cmd reload
-    gridinit_cmd restart  {{openio_nfs_namespace}}-{{openio_nfs_servicename}}
+  service:
+    name: "{{ openio_nfs_daemon }}"
+    state: restarted
+    enabled: yes
   when:
     - _nfs_conf.changed
     - not openio_nfs_provision_only

@@ -1,0 +1,5 @@
+# {{ ansible_managed }}
+
+{% for export in openio_nfs_exports %}
+{{ export.mountpoint }} {{ export.client }}({{ export.options | join(',') }},anonuid={{ export.uid }},anongid={{ export.gid }})
+{% endfor %}
