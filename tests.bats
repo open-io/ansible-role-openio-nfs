@@ -5,9 +5,16 @@
 
 # Tests
 
+@test 'Exportfs' {
+  run bash -c "docker exec -ti ${SUT_ID} exportfs -a"
+  echo "debug $output"
+  [[ "${status}" -eq "0" ]]
+}
+
 @test 'Mount volume' {
   run bash -c "mkdir -p /mnt/testnfs"
   run bash -c "mount -t nfs ${SUT_IP}:/mnt/default /mnt/testnfs"
+  echo "debug: $output"
   [[ "${status}" -eq "0" ]]
 }
 @test 'Test write' {
