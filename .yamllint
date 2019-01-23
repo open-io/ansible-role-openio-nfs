@@ -1,6 +1,7 @@
 ---
 ignore: |
   docker-tests/
+  env/
   .travis.yml
 rules:
   braces:

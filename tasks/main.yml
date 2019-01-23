@@ -35,11 +35,11 @@
   register: _nfs_conf
   tags: configure
 
-- name: restart nfs
+- name: Restart nfs
   service:
     name: "{{ openio_nfs_daemon }}"
     state: restarted
-    enabled: yes
+    enabled: true
   when:
     - _nfs_conf.changed
     - not openio_nfs_provision_only
