@@ -1,0 +1,7 @@
+# roles/nfs/vars/Debian.yml
+# Distribution-specific variables for Ubuntu, Debian, ...
+---
+nfs_packages:
+  - openio-nfs
+syslog_user: syslog
+...

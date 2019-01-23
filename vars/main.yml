@@ -1,0 +1,8 @@
+---
+openio_nfs_sysconfig_dir: "/etc/oio/sds/{{ openio_nfs_namespace }}"
+openio_nfs_servicename: "nfs-{{ openio_nfs_serviceid }}"
+
+openio_nfs_definition_file: >
+  "{{ openio_nfs_sysconfig_dir }}/
+  {{ openio_nfs_servicename }}/{{ openio_nfs_servicename }}.conf"
+...

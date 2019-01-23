@@ -1,0 +1,7 @@
+# roles/nfs/vars/RedHat.yml
+# Distribution-specific variables for RHEL, CentOS, ...
+---
+nfs_packages:
+  - openio-nfs
+syslog_user: openio
+...
