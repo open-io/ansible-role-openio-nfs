@@ -68,7 +68,7 @@ configure_environment() {
       ;;
     'centos_8'|'centos_7'|'fedora_25')
       init=/usr/lib/systemd/systemd
-      run_opts+=('--volume=/sys/fs/cgroup:/sys/fs/cgroup:ro')
+      run_opts+=('--volume=/sys/fs/cgroup:/sys/fs/cgroup:ro' '--privileged' '--volume=nfstest:/mnt/default')
       ;;
     'ubuntu_14.04')
       #run_opts+=('--volume=/sys/fs/cgroup:/sys/fs/cgroup:ro')
