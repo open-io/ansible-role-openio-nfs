@@ -3,7 +3,7 @@
   package:
     name: "{{ pkg }}"
     state: present
-  with_items: "{{ nfs_packages }}"
+  with_items: "{{ openio_nfs_packages }}"
   loop_control:
     loop_var: pkg
   ignore_errors: "{{ ansible_check_mode }}"
