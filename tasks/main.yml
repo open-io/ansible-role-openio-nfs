@@ -48,6 +48,7 @@
     state: restarted
     enabled: true
   when:
+    - openio_nfs_systemd_managed
     - _nfs_conf.changed
     - not openio_nfs_provision_only
   tags: configure
