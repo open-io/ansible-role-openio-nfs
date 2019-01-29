@@ -11,4 +11,5 @@ openio_nfs_exports: []
 #    uid: 560
 #    gid: 560
 openio_nfs_provision_only: false
+openio_nfs_systemd_managed: true
 ...
