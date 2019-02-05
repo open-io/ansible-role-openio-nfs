@@ -15,6 +15,7 @@ Support for more advanced NFSv4 configurations will come in the future
 | --------------------------- | ------- | ------------------------------------------- |
 | `openio_nfs_exports`        | `[]`    | List of mountpoints to deploy*              |
 | `openio_nfs_provision_only` | `false` | Provision only, without restarting services |
+| `openio_nfs_mountpoint_mode` | `0750` | Mountpoint's numeric mode                   |
 | `openio_nfs_systemd_managed` | `true` | NFS server is managed by systemd |
 
 > \* For export format, see *Example playbook*

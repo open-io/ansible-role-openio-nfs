@@ -27,7 +27,7 @@
     state: directory
     owner: "{{ item.uid }}"
     group: "{{ item.gid }}"
-    mode: "0700"
+    mode: "{{ openio_nfs_mountpoint_mode }}"
   with_items:
     - "{{ openio_nfs_exports }}"
   tags: configure
