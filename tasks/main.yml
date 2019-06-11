@@ -5,7 +5,9 @@
   with_first_found:
     - "{{ ansible_distribution }}.yml"
     - "{{ ansible_os_family }}.yml"
-  tags: install
+  tags:
+    - install
+    - configure
 
 - name: "Include {{ ansible_distribution }} tasks"
   include_tasks: "{{ item }}"
@@ -19,7 +21,7 @@
     name: rpcbind
     state: started
     enabled: true
-  tags: install
+  tags: configure
 
 - name: Provision NFS directories
   file:
