@@ -1,0 +1,34 @@
+---
+- hosts: all
+  become: true
+  vars:
+    openio_nfs_exports:
+    - mountpoint: "/mnt/default"
+      client: "*"
+      options:
+      - "rw"
+      - "async"
+      - "all_squash"
+      uid: 560
+      gid: 560
+  pre_tasks:
+    - name: "Generate NFS users/groups"
+      include_role:
+          name: users
+      vars:
+          openio_users_groups:
+          - groupname: "{{ 'nfsgroup_' + mount.gid | string }}"
+            gid: "{{ mount.gid }}"
+          openio_users_add:
+          - username: "{{ 'nfsuser_' + mount.uid | string }}"
+            uid: "{{ mount.uid }}"
+            group: "{{ 'nfsgroup_' + mount.gid | string }}"
+            groups: []
+            home_create: false
+            shell: "/sbin/nologin"
+      with_items: "{{ openio_nfs_exports }}"
+      loop_control:
+        loop_var: mount
+  roles:
+    - role: role_under_test
+...
