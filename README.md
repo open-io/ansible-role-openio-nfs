@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/open-io/ansible-role-openio-nfs.svg?branch=master)](https://travis-ci.org/open-io/ansible-role-openio-nfs)
+[![Build Status](https://travis-ci.org/open-io/ansible-role-openio-nfs.svg?branch=20.04)](https://travis-ci.org/open-io/ansible-role-openio-nfs)
 # Ansible role `nfs`
 
 An Ansible role for installing an NFS server. Currently the install is opinionated and is designed for NFSv3 endpoints.
